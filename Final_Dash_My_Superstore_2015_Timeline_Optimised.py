@@ -15,14 +15,22 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
 server = app.server
 
 # Heading
-header  = html.Div([ html.Div(
-        className="app-header",
+header  = html.Div([ 
+    html.H2('Superstore 2010-2015 Timeline Data', className="app-header--title", style={'text-align': 'center'}),
+    html.Div(
+        id="description-text",
         children=[
-            html.H2('Superstore Timeline Data',
-                     className="app-header--title",
-                     style={'text-align': 'center'})])
-        ]
+            "This dashboard shows the timeline trends and patterns for Superstore 2010-2015.",
+            html.Br(),
+            html.Span("Note:", style={'text-decoration': 'underline', 'color': '#FF4040'}),
+            " The line chart may not be aesthetically pleasing to look at.",
+            html.Br(),
+            html.Span("However", style={'text-decoration': 'underline', 'color': '#FF4040'}),
+            ", it is at Zero to have the same reference point."
+        ],
+        style={'text-align': 'center', 'color': 'white'}
     )
+])
 
 # Filters
 side = html.Div([
@@ -471,6 +479,9 @@ def create_line_chart(filtered_df, x_column, y_column, title, aggregation='sum')
                   labels={x_column: 'Month', y_column: y_label},
                   height=1000, width=900,
                   line_shape='linear', render_mode='auto')
+
+    # Update Y-axis configuration to start at 0
+    fig.update_yaxes(range=[0, y_data[y_column].max()])
 
     fig.update_traces(mode='markers+lines', marker=dict(size=10))
     fig.update_layout(
